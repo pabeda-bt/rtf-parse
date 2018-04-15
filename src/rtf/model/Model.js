@@ -1,7 +1,7 @@
-( function() {
+(function () {
 	'use strict';
 
-	let isClass = require( 'is-class' );
+	let isClass = require('is-class');
 
 	/**
 	 * Base class for RTF model entries.
@@ -15,18 +15,18 @@
 		 * @param {Model/null} parent
 		 * @memberOf Model
 		 */
-		constructor( parent ) {
+		constructor(parent) {
 			this.children = [];
 			this._parent = parent || null;
 		}
 
-		append( node ) {
-			this.children.push( node );
+		append(node) {
+			this.children.push(node);
 
-			node.setParent( this );
+			node.setParent(this);
 		}
 
-		setParent( parent ) {
+		setParent(parent) {
 			this._parent = parent;
 		}
 
@@ -39,7 +39,7 @@
 		 * @memberOf Model
 		 */
 		getLast() {
-			return this.children[ this.children.length - 1 ] || null;
+			return this.children[this.children.length - 1] || null;
 		}
 
 		/**
@@ -61,8 +61,8 @@
 		 * @returns {Model}
 		 * @memberOf Model
 		 */
-		getChild( criteria, recursive ) {
-			return this._getChildren( this, criteria, recursive ).next().value || null;
+		getChild(criteria, recursive) {
+			return this._getChildren(this, criteria, recursive).next().value || null;
 		}
 
 		/**
@@ -76,37 +76,37 @@
 		 * @returns {Model[]}
 		 * @memberOf Model
 		 */
-		getChildren( criteria, recursive ) {
+		getChildren(criteria, recursive) {
 			let ret = [];
 
-			for ( let child of this._getChildren( this, criteria, recursive ) ) {
-				ret.push( child );
+			for (let child of this._getChildren(this, criteria, recursive)) {
+				ret.push(child);
 			}
 
 			return ret;
 		}
 
-		* _getChildren( parent, criteria, recursive ) {
-			let evaluator = this._getEvaluatorFromCriteria( criteria );
+		_getChildren(parent, criteria, recursive) {
+			let evaluator = this._getEvaluatorFromCriteria(criteria);
 
-			for ( let child of parent.children ) {
-				if ( evaluator( child ) === true ) {
-					yield child;
+			for (let child of parent.children) {
+				if (evaluator(child) === true) {
+					child;
 				}
-				if ( recursive ) {
-					yield * this._getChildren( child, criteria, recursive );
+				if (recursive) {
+					this._getChildren(child, criteria, recursive);
 				}
 			}
 		}
 
-		_getEvaluatorFromCriteria( criteria ) {
+		_getEvaluatorFromCriteria(criteria) {
 			let evaluator;
 
-			if ( !criteria ) {
+			if (!criteria) {
 				evaluator = () => true;
-			} else if ( isClass( criteria ) ) {
+			} else if (isClass(criteria)) {
 				evaluator = val => val instanceof criteria;
-			} else if ( typeof criteria === 'function' ) {
+			} else if (typeof criteria === 'function') {
 				evaluator = criteria;
 			} else {
 				evaluator = () => false;
@@ -117,4 +117,4 @@
 	}
 
 	module.exports = Model;
-} )();
+})();
